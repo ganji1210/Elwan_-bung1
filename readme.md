@@ -8,18 +8,120 @@
 
 ## Questions
 ### Describe how Kotlin handles null safety. What are nullable types and non-null types in Kotlin? (0,5 points)
+Kotlin is designed to eliminate the NullPointerException from the code, which is often referred to as "The Billion Dollar Mistake." 
+It introduces a system of null safety in the type system itself, 
+distinguishing between nullable and non-null types, thus enforcing explicit handling of null values. 
+Here's how it works:
 
-<span style="color:blue">Provide your answer here! </span>
-> Note: you can also use code snippets to illustrate your answer. 
+Non-Null Types
+In Kotlin, types are non-null by default. This means that if you declare a variable without specifying it can hold a null value, 
+trying to assign null to it will result in a compile-time error. 
+This behavior prevents the accidental use of null values and eliminates a common source of runtime errors.
 
 ```kotlin 
-// example code snippet
-val a: String = "value" // non-null type
+var nonNullableString: String = "Hello, Kotlin!"
+// nonNullableString = null // This line would cause a compile-time error.
+
+```
+Nullable Types
+
+To allow a variable to hold a null value, you must explicitly mark it as nullable by adding a ? after the type name.
+This makes it clear in the code that the variable might not hold a value, requiring you to handle the potential null case explicitly,
+either by checking for null before using it or by using safe call operators.
+
+```kotlin 
+var nullableString: String? = "I might be null."
+nullableString = null // This is allowed because nullableString is a nullable type.
+
+```
+Handling Nullable Types
+Kotlin provides several mechanisms to safely work with nullable types:
+
+Safe Calls (?.): Allows you to safely access a property or method of a nullable object. If the object is null, 
+the safe call expression evaluates to null without throwing an exception.
+
+```kotlin 
+val length: Int? = nullableString?.length // length is null if nullableString is null.
+
+```
+Elvis Operator (?:): Provides a way to specify 
+a default value to use when the expression on the left-hand side of ?: is null.
+
+```kotlin 
+val lengthOrDefault: Int = nullableString?.length ?: 0 // Uses 0 if nullableString is null.
+
+```
+
+Non-Null Assertion (!!): Converts any value to a non-null type and throws 
+a NullPointerException if the value is null.
+Use this operator only when you are absolutely sure the value won't be null; 
+otherwise, it defeats the purpose of Kotlin's null safety.
+
+```kotlin 
+val length: Int = nullableString!!.length // Throws NullPointerException if nullableString is null.
+
+```
+Safe Casts (as?): Safely casts a variable to the specified type. 
+If the variable cannot be cast, it evaluates to null instead of throwing a ClassCastException.
+
+```kotlin 
+val safeString: String? = someValue as? String // safeString is null if someValue cannot be cast to String.
+
 ```
 
 ### What are lambda expressions and higher order functions in Kotlin? Why would you store a function inside a variable? (0,5 points)
+A lambda expression is essentially an anonymous function that can be passed around as if it were a value. 
+It can be assigned to a variable, 
+passed as an argument to a function, or returned from a function. 
+The syntax for a lambda is as follows:
 
-<span style="color:blue">Provide your answer here!</span>
+```kotlin 
+val sum = { a: Int, b: Int -> a + b }
+
+```
+Here, sum is a lambda expression that takes two integers and returns their sum.
+
+Lambda expressions are particularly useful when working with collections, 
+as they can be used as arguments for methods like filter, map, etc.:
+
+```kotlin 
+val numbers = listOf(1, 2, 3, 4, 5)
+val evenNumbers = numbers.filter { it % 2 == 0 } // Using a lambda to filter even numbers
+
+```
+
+Higher-Order Functions
+A higher-order function is a function that takes another function as an argument or returns a function. 
+This is useful when you want to abstract out a part of a function's logic, making it more flexible and reusable.
+
+For example, a simple higher-order function that takes a lambda as a parameter looks like this:
+
+```kotlin 
+fun calculate(a: Int, b: Int, operation: (Int, Int) -> Int): Int {
+    return operation(a, b)
+}
+
+val sumResult = calculate(4, 5, sum) // Pass the lambda expression 'sum' as a parameter
+
+```
+Here, calculate is a higher-order function that takes two integers 
+and a function that describes an operation on these integers.
+
+
+Storing Functions in Variables
+
+You would store a function in a variable for several reasons:
+
+Reusability: You can define a common operation as a lambda expression and reuse it in multiple places in your code.
+Passing Logic: You can pass the logic encapsulated in the lambda to a higher-order function, enabling powerful patterns like callbacks.
+Deferred Execution: Storing a lambda in a variable allows you to execute the code contained within it at a later time, on-demand.
+Abstraction: It can help in abstracting complex operations, making the codebase cleaner and more readable.
+Functional Constructs: Functions as variables are essential for functional programming constructs like chaining operations on collections.
+Custom Behavior: You can use lambda expressions to provide custom behavior that can be plugged into methods, like sorting algorithms.
+
+In Kotlin, functions are first-class citizens, which means they can be stored in variables, 
+passed as arguments, and returned from other functions, just like any other value. 
+This approach facilitates a functional style of programming that can lead to more expressive and concise code.
 
 ### Provide a solution for the following number guessing game inside `App.kt`. (3 points)
 
